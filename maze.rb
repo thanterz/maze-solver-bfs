@@ -21,6 +21,11 @@ class Maze
    end
 
    def solve()
+      if @ar[@xs][@ys] == 1
+         abort("This is a wall point. Please select another start point")
+      elsif @ar[@xs][@ys] == 2
+         abort("This is the end point. Please select another start point")
+      end
       found = false
       shiftpoint = NodePoint.new(@xs,@ys,nil)
       @q.push(shiftpoint)
@@ -128,6 +133,8 @@ class Maze
 end
 
 # create an object
-box = Maze.new(0,0)
+x1 = ARGV[0].to_i
+y1 = ARGV[1].to_i
+box = Maze.new(x1,y1)
 solution = box.solve()
 box.draw_solution(solution)

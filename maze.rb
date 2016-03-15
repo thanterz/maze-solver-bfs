@@ -18,7 +18,9 @@ class Maze
    end
 
    def solve()
-      if @ar[@xs][@ys] == 1
+      if !isInside(@xs,@ys)
+         abort("Point is not inside the matrix")
+      elsif @ar[@xs][@ys] == 1
          abort("This is a wall point. Please select another start point")
       elsif @ar[@xs][@ys] == 2
          abort("This is the end point. Please select another start point")
@@ -69,7 +71,7 @@ class Maze
             end
          end
       end
-      # create shortest path by assigning . to every point of the path
+      # create shortest path by assigning . to every point of the path. G->S
       if found == true
          while shiftpoint.parent 
             shiftpoint = shiftpoint.parent 

@@ -36,7 +36,7 @@ class Maze
          pointy = shiftpoint.pnty
 
          if @ar[pointx][pointy] == 2
-            @ar[pointx][pointy] = 'E'
+            @ar[pointx][pointy] = 'G'
             found = true
          else
             if isInside(pointx,pointy+1) 
@@ -85,18 +85,24 @@ class Maze
    end
 
    def draw_solution(s)
+      coordinates = []
       if s == true
          puts "Solution:"
-         @ar.each do |row|
-            row.each do |item|
+         @ar.each_with_index do |row,rowi|
+            row.each_with_index do |item,indexi|
                if item == 5
                   print 'P'
-               else
+               elsif item == '.' || item == 'S' || item == 'G'
                   print item
+                  coordinates.push([rowi,indexi])
+               else
+                  print item 
                end
             end
             print "\n"
          end
+         print "Coordinates:\n #{coordinates}"
+         print "\n"
       else
          puts "no solution found"
       end

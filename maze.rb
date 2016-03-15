@@ -1,18 +1,15 @@
+# create a simple class using Struct in order to save the path to the goal point
 class NodePoint < Struct.new(:pntx,:pnty,:parent)
 end
 
 class Maze
-   # constructor method
    
    def initialize(x,y)
       @xs = x
       @ys = y
-      @parentx = nil
-      @parenty = nil
       @ar = []
       @q = []
-      @tpath = []
-
+      # add input to 2 dimensional array 
       File.open("input.txt", "r") do |file|
          file.each_line do |line|
             @ar << line.split.map(&:to_i)
@@ -29,8 +26,11 @@ class Maze
       found = false
       shiftpoint = NodePoint.new(@xs,@ys,nil)
       @q.push(shiftpoint)
+      # assign a number to this coordinate to show that it has been examined
       @ar[@xs][@ys] = 5
+      # while queue is empty and we have not found the Goal point
       while !@q.empty? && found == false
+         # point to be used as a parent for the adjacent points
          shiftpoint = @q.shift
          pointx = shiftpoint.pntx
          pointy = shiftpoint.pnty
@@ -39,44 +39,45 @@ class Maze
             @ar[pointx][pointy] = 'G'
             found = true
          else
+            # check top neighbor. if it is inside the matrix and is not wall and has not been visited then add it to queue
             if isInside(pointx,pointy+1) 
                if !isWall(pointx,pointy+1) && !isVisited(pointx,pointy+1)
                   @q.push(NodePoint.new(pointx,pointy+1,shiftpoint))
-                  #@tpath.push(NodePoint.new(pointx,pointy+1,shiftpoint))
                   @ar[pointx][pointy+1] = 5 if @ar[pointx][pointy+1]!=2
                end
             end
+            # check right neighbor. if it is inside the matrix and is not wall and has not been visited then add it to queue
             if isInside(pointx+1,pointy) == true
                if !isWall(pointx+1,pointy) && !isVisited(pointx+1,pointy)
                   @q.push(NodePoint.new(pointx+1,pointy,shiftpoint))
-                  #@tpath.push(NodePoint.new(pointx+1,pointy,shiftpoint))
                   @ar[pointx+1][pointy] = 5 if @ar[pointx+1][pointy]!=2
                end
             end
+            # check bottom neighbor. if it is inside the matrix and is not wall and has not been visited then add it to queue
             if isInside(pointx,pointy-1) 
                if !isWall(pointx,pointy-1) && !isVisited(pointx,pointy-1)
                   @q.push(NodePoint.new(pointx,pointy-1,shiftpoint))
-                  #@tpath.push(NodePoint.new(pointx,pointy-1,shiftpoint))
                   @ar[pointx][pointy-1] = 5 if @ar[pointx][pointy-1]!=2
                end
             end
+            # check left neighbor. if it is inside the matrix and is not wall and has not been visited then add it to queue
             if isInside(pointx-1,pointy) 
                if !isWall(pointx-1,pointy) && !isVisited(pointx-1,pointy)
                   @q.push(NodePoint.new(pointx-1,pointy,shiftpoint))
-                  #@tpath.push(NodePoint.new(pointx-1,pointy,shiftpoint))
                   @ar[pointx-1][pointy] = 5 if @ar[pointx-1][pointy]!=2
                end
             end
          end
       end
-      #find shortest path
-      
+      # create shortest path by assigning . to every point of the path
       if found == true
          while shiftpoint.parent 
             shiftpoint = shiftpoint.parent 
             if shiftpoint.parent == nil
+               # start point
                @ar[shiftpoint.pntx][shiftpoint.pnty] = 'S'
             else
+               # path point
                @ar[shiftpoint.pntx][shiftpoint.pnty] = '.'
             end
          end
@@ -87,6 +88,7 @@ class Maze
    def draw_solution(s)
       coordinates = []
       if s == true
+         # print path 
          puts "Solution:"
          @ar.each_with_index do |row,rowi|
             row.each_with_index do |item,indexi|
@@ -101,6 +103,7 @@ class Maze
             end
             print "\n"
          end
+         # print coordinates of the path
          print "Coordinates:\n #{coordinates}"
          print "\n"
       else

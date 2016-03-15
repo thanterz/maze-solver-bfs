@@ -93,7 +93,7 @@ class Maze
          @ar.each_with_index do |row,rowi|
             row.each_with_index do |item,indexi|
                if item == 5
-                  print 'P'
+                  print 0
                elsif item == '.' || item == 'S' || item == 'G'
                   print item
                   coordinates.push([rowi,indexi])
